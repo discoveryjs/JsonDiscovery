@@ -1,18 +1,15 @@
-import { copyToClipboardButton } from '../copy-to-clipboard';
-import { downloadAsFileButton } from '../download-as-file';
+import { copyToClipboardButton, downloadAsFileButton } from './common.js';
 
 export default host => {
-    host.view.define('raw', async function(el) {
+    host.view.define('raw', async function(el, config, data) {
         const contentEl = el.appendChild(document.createElement('pre'));
-
-        contentEl.className = 'content';
-
         const {
             firstSliceText,
             firstSliceSize,
             fullSize
-        } = await host.action.call('getRaw');
+        } = data;
 
+        contentEl.className = 'content';
         contentEl.append(firstSliceText);
 
         if (firstSliceSize < fullSize) {
@@ -45,18 +42,17 @@ export default host => {
         }
     });
 
-    host.page.define('raw', {
-        view: 'context',
-        data: () => host.raw,
-        content: [
-            {
-                view: 'page-header',
-                content: [
-                    copyToClipboardButton,
-                    downloadAsFileButton
-                ]
-            },
-            'raw'
-        ]
-    });
+    host.page.define('raw', [
+        {
+            view: 'page-header',
+            content: [
+                copyToClipboardButton,
+                downloadAsFileButton
+            ]
+        },
+        {
+            view: 'raw',
+            data: '"getRaw".callAction()'
+        }
+    ]);
 };

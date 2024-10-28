@@ -10,11 +10,3 @@ export function downloadAsFile(text) {
     link.click();
     link.remove();
 }
-
-export const downloadAsFileButton = {
-    view: 'button',
-    content: 'text:"Download as file"',
-    onClick(_, __, host) {
-        host.actions.downloadAsFile();
-    }
-};

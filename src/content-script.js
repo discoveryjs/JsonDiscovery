@@ -1,8 +1,9 @@
 import { applyContainerStyles, rollbackContainerStyles } from '@discoveryjs/discovery/src/core/utils/container-styles.js';
 import { connectToEmbedApp } from '@discoveryjs/discovery/src/extensions/embed-host.js';
 import copyText from '@discoveryjs/discovery/lib/core/utils/copy-text.js';
-import { downloadAsFile } from './discovery/download-as-file.js';
+import { downloadAsFile } from './actions/download-as-file.js';
 
+const firstSliceMaxSize = 100 * 1000;
 let documentFullyLoaded = document.readyState === 'complete';
 let loadedTimer;
 let disabledElements = [];
@@ -14,7 +15,6 @@ let dataStreamController = null;
 let stylesApplied = false;
 let totalSize = 0;
 let firstSlice = '';
-const firstSliceMaxSize = 100 * 1000;
 
 function raiseBailout(reason) {
     return Object.assign(new Error('Rollback'), { bailout: reason });
@@ -109,7 +109,7 @@ function rollbackPageChanges(error) {
         }
     });
 
-    if (error.bailout) {
+    if (error?.bailout) {
         console.warn('[JsonDiscovery] Bailout reason:', error.bailout); // eslint-disable-line no-console
     }
 }
@@ -197,7 +197,7 @@ function getIframe(settings) {
         }
 
         app.setDarkmode(darkmode);
-        app.defineAction('getSettings', () => settings);
+        app.defineAction('getSettings', () => getSettings());
         app.defineAction('setSettings', settings => {
             chrome.storage.sync.set(settings);
         });

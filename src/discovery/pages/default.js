@@ -1,5 +1,4 @@
-import { copyToClipboardButton } from '../copy-to-clipboard';
-import { downloadAsFileButton } from '../download-as-file';
+import { copyToClipboardButton, downloadAsFileButton } from './common.js';
 
 export default host => {
     host.page.define('default', {
