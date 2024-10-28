@@ -16,6 +16,10 @@
 </style>
 <body>
     <script>parent.postMessage('json-discovery-sandbox-scripts-work', '*');</script>
-    <script src="sandbox.js"></script>
+    <script type="module">
+        import { initDiscovery } from './discovery.js';
+
+        initDiscovery();
+    </script>
 </body>
 </html>

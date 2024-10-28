@@ -30,7 +30,8 @@
         {
             "resources": [
                 "sandbox.html",
-                "sandbox.js",
+                "discovery.js",
+                "discovery.css",
                 "icons/*",
                 "assets/*"
             ],

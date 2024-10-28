@@ -1,4 +1,3 @@
-import './discovery.css';
 import { version } from '../../package.json';
 import { App } from '@discoveryjs/discovery';
 import joraHelpers from './jora-helpers';
@@ -11,7 +10,7 @@ import * as pages from './pages';
  */
 export function initDiscovery() {
     const discovery = new App({
-        styles: [{ type: 'link', href: 'sandbox.css' }],
+        styles: [{ type: 'link', href: 'discovery.css' }],
         embed: true,
         inspector: true,
         darkmodePersistent: true,

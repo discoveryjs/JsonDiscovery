@@ -28,7 +28,8 @@ async function build(browser) {
     await esbuild.build({
         entryPoints: [
             { in: path.join(indir, 'content-script.js'), out: 'content-script' },
-            path.join(indir, 'sandbox.js')
+            { in: path.join(indir, 'discovery/index.js'), out: 'discovery' },
+            { in: path.join(indir, 'discovery/index.css'), out: 'discovery' }
         ],
         format: 'esm',
         bundle: true,
