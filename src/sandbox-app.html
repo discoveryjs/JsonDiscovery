@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<style>
+    html,
+    body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        border: none;
+        -webkit-text-size-adjust: 100%;
+        background: transparent;
+    }
+    .discovery {
+        height: 100vh;
+    }
+</style>
+<body>
+    <script>parent.postMessage('json-discovery-sandbox-scripts-work', '*');</script>
+    <script type="module">
+        import { initAppDiscovery } from './discovery.js';
+
+        initAppDiscovery();
+    </script>
+</body>
+</html>

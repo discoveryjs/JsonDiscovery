@@ -22,12 +22,16 @@ async function build(browser) {
     fs.writeFileSync(path.join(outdir, 'manifest.json'), manifest(browser));
 
     copyFile(path.join(indir, 'sandbox.html'), outdir);
+    copyFile(path.join(indir, 'sandbox-app.html'), outdir);
+    copyFile(path.join(indir, 'app.html'), outdir);
     copyFiles(path.join(indir, 'icons'), outdir);
 
     // build bundle
     await esbuild.build({
         entryPoints: [
             { in: path.join(indir, 'content-script.js'), out: 'content-script' },
+            { in: path.join(indir, 'app.js'), out: 'app' },
+            { in: path.join(indir, 'background.js'), out: 'background' },
             { in: path.join(indir, 'discovery/index.js'), out: 'discovery' },
             { in: path.join(indir, 'discovery/index.css'), out: 'discovery' }
         ],

@@ -1,4 +1,4 @@
-import copyText from '@discoveryjs/discovery/lib/core/utils/copy-text.js';
+import { copyText } from '@discoveryjs/discovery/lib/core/utils/copy-text.js';
 
 const splitter = {
     view: 'block',

@@ -1,6 +1,7 @@
 import { applyContainerStyles, rollbackContainerStyles } from '@discoveryjs/discovery/src/core/utils/container-styles.js';
 import { connectToEmbedApp } from '@discoveryjs/discovery/src/extensions/embed-host.js';
-import copyText from '@discoveryjs/discovery/lib/core/utils/copy-text.js';
+import { copyText } from '@discoveryjs/discovery/lib/core/utils/copy-text.js';
+import { getSettings } from './settings.js';
 import { downloadAsFile } from './actions/download-as-file.js';
 
 const firstSliceMaxSize = 100 * 1000;
@@ -322,14 +323,3 @@ getSettings()
     .then(checkLoaded)
     .catch(rollbackPageChanges);
 
-/**
- * Restores settings from storage
- * @returns {Promise}
- */
-function getSettings() {
-    return chrome.storage.sync.get({
-        expandLevel: 3,
-        darkmode: 'auto',
-        whatsnew: {}
-    });
-}

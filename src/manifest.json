@@ -11,7 +11,8 @@
         "128": "icons/128.png"
     },
     "permissions": [
-        "storage"
+        "storage",
+        "tabs"
     ],
     "host_permissions": [
         "*://*/*"
@@ -21,15 +22,28 @@
         "run_at": "document_start",
         "matches": ["<all_urls>"]
     }],
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self'; style-src 'self' 'unsafe-inline';"
+    },
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
+    "action": {
+        "default_title": "Click to open sandbox"
+    },
     "sandbox": {
         "pages": [
-            "sandbox.html"
+            "sandbox.html",
+            "sandbox-app.html"
         ]
     },
     "web_accessible_resources": [
         {
             "resources": [
                 "sandbox.html",
+                "app.html",
+                "app.js",
                 "discovery.js",
                 "discovery.css",
                 "icons/*",

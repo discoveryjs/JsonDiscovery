@@ -35,3 +35,29 @@ export function initDiscovery() {
         };
     };
 }
+
+/**
+ * Discovery empty page initialization
+ */
+export function initAppDiscovery() {
+    const discovery = new App({
+        styles: [{ type: 'link', href: 'discovery.css' }],
+        embed: true,
+        upload: { clipboard: true },
+        inspector: true,
+        darkmodePersistent: true,
+        setup({ addQueryHelpers }) {
+            addQueryHelpers(joraHelpers);
+        }
+    });
+
+    // FIXME: temprorary workaround since discovery reset context on setData()
+    discovery.version = version;
+    discovery.getRenderContext = function() {
+        return {
+            ...App.prototype.getRenderContext.call(this),
+            version: this.version
+        };
+    };
+    discovery.renderPage('default');
+}
