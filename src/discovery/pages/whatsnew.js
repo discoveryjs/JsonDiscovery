@@ -5,7 +5,7 @@ export default host => {
         try {
             const { whatsnew } = await host.action.call('getSettings');
 
-            return !whatsnew?.[host.version];
+            return !whatsnew?.[host.info.version];
         } catch {
             return false;
         }
@@ -20,7 +20,7 @@ export default host => {
             postRender: () =>
                 host.action.call('setSettings', {
                     whatsnew: {
-                        [host.version]: true
+                        [host.info.version]: true
                     }
                 })
         }

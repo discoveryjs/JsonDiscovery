@@ -42,6 +42,12 @@ getSettings().then(settings => {
             applyDarkmodeStyles(darkmode);
         });
 
+        // actions
+        app.defineAction('getSettings', () => getSettings());
+        app.defineAction('setSettings', settings => {
+            chrome.storage.sync.set(settings);
+        });
+
         // sync location
         // Note: should be last since lead to renders
         app.setRouterPreventLocationUpdate(true);

@@ -1,8 +1,11 @@
 .view-raw > .content {
-    word-wrap: break-word;
-    white-space: pre-wrap;
-    word-break: break-all;
     margin: 0;
+    font-family: var(--discovery-monospace-font-family);
+    font-size: 12px;
+    line-height: 18px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-all;
 }
 .view-raw > .content:not(:only-child)::after {
     content: '...';

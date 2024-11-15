@@ -1,7 +1,7 @@
-import { utils } from '@discoveryjs/discovery';
+import { createElement } from '@discoveryjs/discovery/utils';
 
 export default function(host) {
-    const flashMessagesContainer = utils.createElement('div', 'flash-messages-container');
+    const flashMessagesContainer = createElement('div', 'flash-messages-container');
 
     host.dom.container.append(flashMessagesContainer);
 

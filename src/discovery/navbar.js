@@ -9,7 +9,7 @@ export default host => {
     //
     // Main section
     //
-    host.nav.append({
+    host.nav.prepend({
         when: '#.page != "whatsnew"',
         data: '"hasNews".callAction()',
         whenData: true,
@@ -18,7 +18,7 @@ export default host => {
             host.setPage('whatsnew');
         }
     });
-    host.nav.append({
+    host.nav.prepend({
         when: '#.page = "discovery"',
         content: 'text:"Copy URL"',
         async onClick() {
@@ -26,7 +26,7 @@ export default host => {
             host.action.call('flashMessage', 'URL copied to clipboard', 'success');
         }
     });
-    host.nav.append({
+    host.nav.prepend({
         when: '#.page != "default"',
         content: 'text:"Default view"',
         onClick() {
@@ -34,7 +34,7 @@ export default host => {
             history.replaceState(null, null, ' '); // ????
         }
     });
-    host.nav.append({
+    host.nav.prepend({
         when: '#.page != "raw"',
         content: 'text:"Raw JSON"',
         onClick: () => host.setPage('raw'),

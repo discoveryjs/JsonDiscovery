@@ -1,6 +1,5 @@
-import { applyContainerStyles, rollbackContainerStyles } from '@discoveryjs/discovery/src/core/utils/container-styles.js';
-import { connectToEmbedApp } from '@discoveryjs/discovery/src/extensions/embed-host.js';
-import { copyText } from '@discoveryjs/discovery/lib/core/utils/copy-text.js';
+import { applyContainerStyles, rollbackContainerStyles, copyText } from '@discoveryjs/discovery/utils';
+import { connectToEmbedApp } from '@discoveryjs/discovery/embed';
 import { getSettings } from './settings.js';
 import { downloadAsFile } from './actions/download-as-file.js';
 

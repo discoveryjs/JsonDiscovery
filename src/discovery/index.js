@@ -10,6 +10,9 @@ import * as pages from './pages';
  */
 export function initDiscovery() {
     const discovery = new App({
+        name: 'JsonDiscovery',
+        description: 'Changing the way to explore JSON',
+        version,
         styles: [{ type: 'link', href: 'discovery.css' }],
         embed: true,
         inspector: true,
@@ -25,15 +28,6 @@ export function initDiscovery() {
     });
 
     discovery.nav.remove('index-page');
-
-    // FIXME: temprorary workaround since discovery reset context on setData()
-    discovery.version = version;
-    discovery.getRenderContext = function() {
-        return {
-            ...App.prototype.getRenderContext.call(this),
-            version: this.version
-        };
-    };
 }
 
 /**
@@ -41,23 +35,24 @@ export function initDiscovery() {
  */
 export function initAppDiscovery() {
     const discovery = new App({
+        name: 'JsonDiscovery',
+        description: 'Changing the way to explore JSON',
+        version,
         styles: [{ type: 'link', href: 'discovery.css' }],
-        embed: true,
         upload: { clipboard: true },
+        embed: true,
         inspector: true,
         darkmodePersistent: true,
+        extensions: [
+            flashMessages,
+            navbar,
+            pages
+        ],
         setup({ addQueryHelpers }) {
             addQueryHelpers(joraHelpers);
         }
     });
 
-    // FIXME: temprorary workaround since discovery reset context on setData()
-    discovery.version = version;
-    discovery.getRenderContext = function() {
-        return {
-            ...App.prototype.getRenderContext.call(this),
-            version: this.version
-        };
-    };
+    discovery.nav.remove('index-page');
     discovery.renderPage('default');
 }
