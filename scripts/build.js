@@ -31,6 +31,7 @@ async function build(browser) {
         entryPoints: [
             { in: path.join(indir, 'content-script.js'), out: 'content-script' },
             { in: path.join(indir, 'app.js'), out: 'app' },
+            { in: path.join(indir, 'app-styles.js'), out: 'app-styles' },
             { in: path.join(indir, 'background.js'), out: 'background' },
             { in: path.join(indir, 'discovery/index.js'), out: 'discovery' },
             { in: path.join(indir, 'discovery/index.css'), out: 'discovery' }
@@ -39,6 +40,7 @@ async function build(browser) {
         bundle: true,
         minify: true,
         outdir,
+        // conditions: ['discovery-dev'],
         define: {
             global: 'window'
         },

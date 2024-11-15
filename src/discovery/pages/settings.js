@@ -1,5 +1,3 @@
-import { utils } from '@discoveryjs/discovery';
-
 export default host => {
     host.view.define('label', function(el, config = {}) {
         const { text } = config;
@@ -37,8 +35,6 @@ export default host => {
 
                 detachToggleDarkMode();
                 detachToggleDarkMode = host.darkmode.subscribe((value, mode) => {
-                    utils.applyContainerStyles(host.dom.wrapper.parentNode, { darkmode: value });
-
                     const newValue = mode === 'auto' ? 'auto' : value;
 
                     if (newValue === selfValue) {

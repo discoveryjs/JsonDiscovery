@@ -295,7 +295,7 @@ async function checkLoaded(settings) {
 
     if (!stylesApplied) {
         stylesApplied = true;
-        applyContainerStyles(document.body, settings);
+        applyContainerStyles(document.body, settings.darkmode);
     }
 
     if (!documentFullyLoaded) {

@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+<script src="app-styles.js"></script>
 <style>
     html,
     body {
@@ -8,15 +9,22 @@
         padding: 0;
         border: none;
         -webkit-text-size-adjust: 100%;
-        background: transparent;
+        overscroll-behavior: none;
     }
     .discovery {
+        vertical-align: top;
         height: 100vh;
         width: 100vw;
+        border: 0;
+        visibility: hidden;
+    }
+    .discovery.ready {
+        visibility: visible;
     }
 </style>
+</head>
 <body>
-    <iframe src="sandbox-app.html" class="discovery" frameborder="0"></iframe>
+    <iframe src="sandbox-app.html" class="discovery" sandbox="allow-scripts" allow="clipboard-read" frameborder="0"></iframe>
     <script src="app.js"></script>
 </body>
 </html>

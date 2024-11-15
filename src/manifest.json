@@ -44,6 +44,7 @@
                 "sandbox.html",
                 "app.html",
                 "app.js",
+                "app-styles.js",
                 "discovery.js",
                 "discovery.css",
                 "icons/*",

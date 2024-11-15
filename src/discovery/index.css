@@ -25,11 +25,6 @@
     border-bottom: inherit;
 }
 
-/* FIXME: remove in the future, temporary fix */
-.discovery-nav .view-nav-button[data-name="inspect"]::before {
-    margin: 2px -8px 0;
-}
-
 /*
  * Page content
  */

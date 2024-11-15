@@ -7,7 +7,7 @@ const splitter = {
 
 export default host => {
     //
-    // Primary section
+    // Main section
     //
     host.nav.append({
         when: '#.page != "whatsnew"',
@@ -47,7 +47,6 @@ export default host => {
     //
     // Burger menu
     //
-
     host.nav.menu.append({
         content: 'text:"Download JSON as file"',
         onClick(_, { hide }) {
@@ -80,5 +79,14 @@ export default host => {
             hide();
             host.setPage('settings');
         }
+    });
+
+    //
+    // Secondary section
+    //
+    host.nav.primary.append({
+        name: 'github',
+        href: 'https://github.com/discoveryjs/JsonDiscovery',
+        external: true
     });
 };

@@ -1,24 +1,17 @@
-import { applyContainerStyles } from '@discoveryjs/discovery/src/core/utils/container-styles.js';
-import { connectToEmbedApp } from '@discoveryjs/discovery/src/extensions/embed-host.js';
+import { applyContainerStyles } from '@discoveryjs/discovery/utils';
+import { connectToEmbedApp } from '@discoveryjs/discovery/embed';
 import { getSettings } from './settings.js';
 
-const iframe = document.querySelector('iframe');
+function applyDarkmodeStyles(darkmode) {
+    applyContainerStyles(document.documentElement, darkmode);
+    localStorage.setItem('darkmode', darkmode);
+}
 
 getSettings().then(settings => {
-    applyContainerStyles(document.body, { darkmode: settings.darkmode });
-    connectToEmbedApp(iframe, (app) => {
-        // sync location
-        app.setRouterPreventLocationUpdate(true);
-        app.setPageHash(location.hash);
-        addEventListener('hashchange', () => app.setPageHash(location.hash), false);
-        app.on('pageHashChanged', (newPageHash, replace) => {
-            if (replace) {
-                location.replace(newPageHash);
-            } else {
-                location.hash = newPageHash;
-            }
-        });
+    const iframe = document.querySelector('iframe');
 
+    applyDarkmodeStyles(settings.darkmode);
+    connectToEmbedApp(iframe, (app) => {
         // settings
         let darkmode = 'auto';
 
@@ -32,7 +25,6 @@ getSettings().then(settings => {
         }
 
         app.setDarkmode(darkmode);
-
         app.on('darkmodeChanged', async event => {
             const settings = await getSettings();
             let darkmode = 'auto';
@@ -47,6 +39,22 @@ getSettings().then(settings => {
             }
 
             chrome.storage.sync.set({ ...settings, darkmode });
+            applyDarkmodeStyles(darkmode);
         });
+
+        // sync location
+        // Note: should be last since lead to renders
+        app.setRouterPreventLocationUpdate(true);
+        app.setPageHash(location.hash);
+        addEventListener('hashchange', () => app.setPageHash(location.hash), false);
+        app.on('pageHashChanged', (newPageHash, replace) => {
+            if (replace) {
+                location.replace(newPageHash);
+            } else {
+                location.hash = newPageHash;
+            }
+        });
+
+        iframe.classList.add('ready');
     });
 });
