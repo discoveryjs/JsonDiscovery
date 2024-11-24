@@ -16,6 +16,8 @@ const browsers = [
 
 async function build(browser) {
     const outdir = path.join(__dirname, `/../build-${browser}`);
+    const discoveryDir = path.dirname(require.resolve('@discoveryjs/discovery/package.json'));
+    const discoveryDev = fs.existsSync(path.join(discoveryDir, 'src'));
 
     fs.rmSync(outdir, { recursive: true, force: true }); // rm -rf
     fs.mkdirSync(outdir, { recursive: true });
@@ -40,7 +42,7 @@ async function build(browser) {
         bundle: true,
         minify: true,
         outdir,
-        // conditions: ['discovery-dev'],
+        conditions: discoveryDev ? ['discovery-dev'] : [],
         define: {
             global: 'window'
         },
@@ -50,47 +52,57 @@ async function build(browser) {
             '.md': 'text'
         }
     });
+
+    return discoveryDev
+        ? [path.join(discoveryDir, 'src')]
+        : [];
 }
 
 const buildAll = async function() {
+    const watchDirs = [];
+
     console.log('Building bundles:'); // eslint-disable-line no-console
 
     for (const browser of browsers) {
         console.log(`  ${browser}...`); // eslint-disable-line no-console
 
         try {
-            await build(browser);
+            watchDirs.push(...await build(browser));
         } catch (e) {
             if (!/esbuild/.test(e.stack)) {
                 console.error(e); // eslint-disable-line no-console
             }
 
-            return;
+            return [];
         }
     }
 
     console.log('  OK'); // eslint-disable-line no-console
+
+    return [...new Set(watchDirs)];
 };
 
 (async function() {
-    await buildAll();
+    const extraFoldersToWatch = await buildAll();
 
     if (watch) {
         const lastChange = new Map();
 
-        fs.watch(indir, { recursive: true }, function(event, fn) {
-            const filename = path.join(indir, fn);
-            if (event === 'rename' && !fs.existsSync(filename)) {
-                return;
-            }
-            const mtime = Number(fs.statSync(filename).mtime);
+        for (const dirpath of [indir, ...extraFoldersToWatch]) {
+            fs.watch(dirpath, { recursive: true }, function(event, fn) {
+                const filename = path.join(dirpath, fn);
+                if (event === 'rename' && !fs.existsSync(filename)) {
+                    return;
+                }
+                const mtime = Number(fs.statSync(filename).mtime);
 
-            // avoid build when file doesn't changed but event is received
-            if (lastChange.get(fn) !== mtime) {
-                lastChange.set(fn, mtime);
-                buildAll();
-            }
-        });
+                // avoid build when file doesn't changed but event is received
+                if (lastChange.get(fn) !== mtime) {
+                    lastChange.set(fn, mtime);
+                    buildAll();
+                }
+            });
+        }
     }
 })();
 
