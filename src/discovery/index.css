@@ -1,4 +1,5 @@
 @import '@discoveryjs/discovery/src/lib.css';
+@import './pages/default.css';
 @import './pages/raw.css';
 @import './pages/settings.css';
 @import './pages/whatsnew.css';
@@ -9,11 +10,6 @@
     inset: 0;
     z-index: 1000;
     transition: none;
-}
-.discovery-root {
-    --discovery-page-padding-right: 12px;
-    --discovery-page-padding-bottom: 12px;
-    --discovery-page-padding-left: 12px;
 }
 
 /*

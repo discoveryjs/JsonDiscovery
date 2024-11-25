@@ -1,0 +1,12 @@
+.page-default:has(> .view-struct) {
+    --discovery-page-padding-right: 12px;
+    --discovery-page-padding-bottom: 12px;
+    --discovery-page-padding-left: 12px;
+    background-color: rgba(205, 205, 205, 0.1);
+    flex: 1;
+}
+.page-default > .view-struct {
+    background-color: transparent;
+    padding: 10px 0 0 0;
+    margin-bottom: -4px;
+}

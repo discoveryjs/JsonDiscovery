@@ -1,3 +1,13 @@
+.page-raw {
+    --discovery-page-padding-right: 12px;
+    --discovery-page-padding-bottom: 12px;
+    --discovery-page-padding-left: 12px;
+    background-color: rgba(205, 205, 205, 0.05);
+    flex: 1;
+}
+.page-raw > .view-raw {
+    padding-top: 11px;
+}
 .view-raw > .content {
     margin: 0;
     font-family: var(--discovery-monospace-font-family);
@@ -9,6 +19,9 @@
 }
 .view-raw > .content:not(:only-child)::after {
     content: '...';
+}
+.view-raw > .content:not(:only-child) {
+    padding-bottom: 38px;
 }
 .view-raw .too-big-json {
     position: fixed;
