@@ -1,4 +1,4 @@
-@import '@discoveryjs/discovery/lib/lib.css';
+@import '@discoveryjs/discovery/src/lib.css';
 @import './pages/raw.css';
 @import './pages/settings.css';
 @import './pages/whatsnew.css';
@@ -53,8 +53,8 @@
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
 }
-.view-page-header .view-button.collapse-all:empty::before,
-.view-page-header .view-button.expand-all:empty::before {
+.view-page-header .view-button.collapse-all:empty::after,
+.view-page-header .view-button.expand-all:empty::after {
     content: '';
     width: 16px;
     height: 16px;
@@ -66,7 +66,7 @@
     visibility: visible;
 }
 
-.view-page-header .view-button.expand-all::before {
+.view-page-header .view-button.expand-all:empty::after {
     mask-image: url('./img/expand-all.svg');
 }
 
