@@ -1,4 +1,4 @@
-import { copyToClipboardButton, downloadAsFileButton } from './common.js';
+import { copyToClipboardButton, downloadAsFileButton, saveAsFileButton } from './common.js';
 
 export default host => {
     host.view.define('raw', async function(el, config, data) {
@@ -47,7 +47,8 @@ export default host => {
             view: 'page-header',
             content: [
                 copyToClipboardButton,
-                downloadAsFileButton
+                downloadAsFileButton,
+                saveAsFileButton
             ]
         },
         {

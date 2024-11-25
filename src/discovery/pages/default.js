@@ -1,4 +1,4 @@
-import { copyToClipboardButton, downloadAsFileButton } from './common.js';
+import { copyToClipboardButton, downloadAsFileButton, saveAsFileButton } from './common.js';
 
 export default host => {
     host.page.define('default', {
@@ -13,6 +13,7 @@ export default host => {
                     content: [
                         copyToClipboardButton,
                         downloadAsFileButton,
+                        saveAsFileButton,
                         {
                             view: 'block',
                             data: '"getSettings".callAction()',

@@ -9,6 +9,14 @@ export const copyToClipboardButton = {
 
 export const downloadAsFileButton = {
     view: 'button',
+    when: '#.actions.downloadAsFile',
     onClick: '="downloadAsFile".actionHandler()',
     text: 'Download as file'
+};
+
+export const saveAsFileButton = {
+    view: 'button',
+    when: '#.actions.saveAsFile',
+    onClick: '="saveAsFile".actionHandler()',
+    text: 'Save as file...'
 };

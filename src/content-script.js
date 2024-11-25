@@ -1,7 +1,7 @@
 import { applyContainerStyles, rollbackContainerStyles, copyText } from '@discoveryjs/discovery/utils';
 import { connectToEmbedApp } from '@discoveryjs/discovery/embed';
 import { getSettings } from './settings.js';
-import { downloadAsFile } from './actions/download-as-file.js';
+import { downloadAsFile, saveAsFile } from './actions/download-as-file.js';
 
 const firstSliceMaxSize = 100 * 1000;
 let documentFullyLoaded = document.readyState === 'complete';
@@ -204,10 +204,19 @@ function getIframe(settings) {
         });
 
         app.defineAction('copyToClipboard', () => copyText(pre.textContent));
-        app.defineAction('downloadAsFile', () => {
-            // FIXME: bad for large files
-            downloadAsFile(pre.textContent);
-        });
+
+        if (typeof saveAsFile === 'function') {
+            app.defineAction('saveAsFile', () => {
+                // don't return a promise since it can cause an action timeout
+                saveAsFile(pre, (details) => {
+                    app.notify('saveAsFile', details);
+                });
+            });
+        } else {
+            app.defineAction('downloadAsFile', () => {
+                downloadAsFile(pre);
+            });
+        }
 
         app.defineAction('permalink', () => window.location.toString());
 
