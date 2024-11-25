@@ -250,14 +250,7 @@ function getIframe(settings) {
         // Note: should be last since lead to renders
         app.setRouterPreventLocationUpdate(true);
         app.setPageHash(location.hash);
-        addEventListener('hashchange', () => app.setPageHash(location.hash), false);
-        app.on('pageHashChanged', (newPageHash, replace) => {
-            if (replace) {
-                location.replace(newPageHash);
-            } else {
-                location.hash = newPageHash;
-            }
-        });
+        app.setLocationSync(true);
 
         // check load and appearance
         getSettings().then(checkLoaded);
