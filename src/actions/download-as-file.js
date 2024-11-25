@@ -13,6 +13,19 @@ function getSuggestedName() {
     return basename + '.json';
 }
 
+// An effective way to compute total size;
+// using `preEl.textContent.length` triggers concatenating all text nodes into a single long string,
+// which leads to extra memory usage and can crash due to exceeding the string length limit (~500MB).
+function getTotalSize(preEl) {
+    let total = 0;
+
+    for (let cursor = preEl.firstChild; cursor !== null; cursor = cursor.nextSibling) {
+        total += cursor.nodeValue.length;
+    }
+
+    return total;
+}
+
 export const saveAsFile = isSaveFilePickerSupported
     ? async function saveAsFile(preEl, onProgress) {
         const suggestedName = getSuggestedName();
@@ -27,14 +40,14 @@ export const saveAsFile = isSaveFilePickerSupported
             ]
         });
         const writableStream = await handler.createWritable();
+        let completed = 0;
         const baseProgress = {
             id: randomId(),
             filename: handler.name,
             done: false,
-            completed: 0,
-            total: preEl.textContent.length
+            completed,
+            total: getTotalSize(preEl)
         };
-        let completed = 0;
 
         onProgress(baseProgress);
 
