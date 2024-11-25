@@ -4,30 +4,25 @@
     pointer-events: none;
     bottom: 20px;
     right: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 5px;
 }
 .flash-messages-container .view-alert {
+    min-width: 180px;
     position: relative;
+    box-shadow: 0 0 1px 1px #fff;
+    backdrop-filter: blur(8px);
+    margin: 0;
+    padding: 8px 12px;
+    line-height: 1.2em;
+}
+.discovery-root-darkmode .flash-messages-container .view-alert {
+    box-shadow: 0px 0px 1px 1px #0004;
+    backdrop-filter: blur(8px) brightness(0.5)
 }
 .flash-messages-container .view-alert.ready-to-remove {
     transition: opacity .25s ease-out;
     opacity: 0;
-}
-.flash-messages-container .view-alert::before {
-    content: '';
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: -2px;
-    background-color: var(--discovery-background-color);
-    opacity: .9;
-    border-radius: 5px;
-}
-@supports (backdrop-filter: blur(3px)) {
-    .flash-messages-container .view-alert::before {
-        backdrop-filter: blur(3px);
-        opacity: .65;
-    }
 }

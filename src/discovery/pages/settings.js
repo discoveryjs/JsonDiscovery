@@ -102,9 +102,9 @@ export default host => {
         if (valid) {
             host.query(`"setSettings".callAction(${JSON.stringify(settings)})`, host.data);
 
-            host.action.call('flashMessage', 'Options saved.', 'success');
+            host.action.call('flashMessage', 'Options saved.');
         } else {
-            host.action.call('flashMessage', errors.join(' '), 'danger');
+            host.action.call('flashMessage', { type: 'danger', data: errors.join(' ') });
         }
     }
 

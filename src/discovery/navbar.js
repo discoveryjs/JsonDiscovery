@@ -23,15 +23,7 @@ export default host => {
         content: 'text:"Copy URL"',
         async onClick() {
             copyText(await host.action.call('permalink'));
-            host.action.call('flashMessage', 'URL copied to clipboard', 'success');
-        }
-    });
-    host.nav.prepend({
-        when: '#.page != "default"',
-        content: 'text:"Default view"',
-        onClick() {
-            host.setPage('default');
-            history.replaceState(null, null, ' '); // ????
+            host.action.call('flashMessage', 'URL copied to clipboard');
         }
     });
     host.nav.prepend({
@@ -41,6 +33,14 @@ export default host => {
         tooltip: {
             position: 'trigger',
             content: 'text:"Show JSON as is"'
+        }
+    });
+    host.nav.prepend({
+        when: '#.page != "default"',
+        content: 'text:"Default view"',
+        onClick() {
+            host.setPage('default');
+            history.replaceState(null, null, ' '); // ????
         }
     });
 
@@ -59,7 +59,7 @@ export default host => {
         async onClick(_, { hide }) {
             hide();
             await host.action.call('copyToClipboard');
-            host.action.call('flashMessage', 'JSON copied to clipboard', 'success');
+            host.action.call('flashMessage', 'JSON copied to clipboard');
         }
     });
 
