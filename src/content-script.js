@@ -158,7 +158,7 @@ function getIframe(settings) {
 
     iframe = document.createElement('iframe');
     iframe.className = 'discovery';
-    iframe.setAttribute('sandbox', 'allow-scripts');
+    iframe.setAttribute('sandbox', 'allow-scripts allow-popups allow-modals');
     iframe.src = chrome.runtime.getURL('sandbox.html');
     iframe.style.cssText = 'position: fixed; inset: 0; border: 0; width: 100%; height: 100%; visibility: hidden';
 
