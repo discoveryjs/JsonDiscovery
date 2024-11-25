@@ -26,11 +26,10 @@ export default function(host) {
         }
 
         if (remove) {
+            messageById.delete(id);
             setTimeout(() => el.classList.add('ready-to-remove'), 1250);
             setTimeout(() => el.remove(), 1500);
-        }
-
-        if (id) {
+        } else if (id) {
             messageById.set(id, el);
         }
     });
