@@ -1,4 +1,4 @@
-## next
+## 1.15.0 (26-11-2024)
 
 - Migrated to Manifest V3, eliminating warnings about the extension's future support
 - Achieved nearly zero impact on regular pages (non-JSON documents)
