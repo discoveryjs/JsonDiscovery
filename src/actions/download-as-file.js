@@ -51,9 +51,29 @@ export const saveAsFile = isSaveFilePickerSupported
 
         onProgress(baseProgress);
 
+        // When JSON is loaded via the network, it can be split into small chunks;
+        // writing into a stream in small chunks can be very slow.
+        // Use a buffer to ensure that the chunk size is at least 1MB.
+        let buffer = null;
+        const FLUSH_BUFFER_SIZE = 1000000; // 1MB
+        const flushBuffer = async() => {
+            await writableStream.write(buffer);
+            onProgress({ ...baseProgress, completed: completed += buffer.length });
+            buffer = null;
+        };
+
         for (let cursor = preEl.firstChild; cursor !== null; cursor = cursor.nextSibling) {
-            await writableStream.write(cursor.nodeValue);
-            onProgress({ ...baseProgress, completed: completed += cursor.nodeValue.length });
+            buffer = buffer === null
+                ? cursor.nodeValue
+                : buffer + cursor.nodeValue;
+
+            if (buffer.length > FLUSH_BUFFER_SIZE) {
+                await flushBuffer();
+            }
+        }
+
+        if (buffer !== null) {
+            await flushBuffer();
         }
 
         onProgress({ ...baseProgress, done: true, completed });
