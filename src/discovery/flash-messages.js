@@ -1,4 +1,4 @@
-import { createElement } from '@discoveryjs/discovery/utils';
+import { createElement, createFragment } from '@discoveryjs/discovery/utils';
 
 export default function(host) {
     const flashMessagesContainer = createElement('div', 'flash-messages-container');
@@ -7,7 +7,7 @@ export default function(host) {
     host.dom.container.append(flashMessagesContainer);
 
     host.action.define('flashMessage', async(config) => {
-        const fragment = document.createDocumentFragment();
+        const fragment = createFragment();
         const { id, type = 'success', data, content = 'text', remove = true } = typeof config === 'string'
             ? { data: config }
             : config;
@@ -17,18 +17,19 @@ export default function(host) {
             content
         }, data);
 
-        const el = fragment.firstChild;
+        let el = messageById.get(id);
 
-        if (messageById.has(id)) {
-            messageById.get(id).replaceWith(el);
+        if (el !== undefined) {
+            el.replaceChildren(fragment);
         } else {
+            el = createElement('div', 'flash-message-wrapper', [fragment]);
             flashMessagesContainer.append(el);
         }
 
         if (remove) {
             messageById.delete(id);
-            setTimeout(() => el.classList.add('ready-to-remove'), 1250);
-            setTimeout(() => el.remove(), 1500);
+            setTimeout(() => el.classList.add('ready-to-remove'), 1750);
+            setTimeout(() => el.remove(), 2000);
         } else if (id) {
             messageById.set(id, el);
         }
