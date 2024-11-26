@@ -42,47 +42,47 @@ const flushData = (settings) => {
                 throw raiseBailout('Empty input');
             }
 
-            break;
+            return;
         }
 
-        if (chunkNode.nodeType === Node.TEXT_NODE) {
-            if (isFirstChunk) {
-                if (/^\s*[{[]/.test(chunkNode.nodeValue)) {
-                    // probably JSON, accept an object or an array only to reduce false positive
-                    if (dataStreamController === null) {
-                        if (iframe === null) {
-                            pre.before(getIframe(settings));
-                        }
-
-                        return;
-                    }
-                } else {
-                    // bailout: not a JSON or a non-object / non-array value
-                    throw raiseBailout('Not a JSON or a non-object / non-array value');
-                }
-            }
-
-            const chunk = chunkNode === preCursor
-                // slice a new content from a chunk node in case a content
-                // was appended to an existing text node
-                ? chunkNode.nodeValue.slice(prevCursorValue.length)
-                : chunkNode.nodeValue;
-
-            totalSize += chunk.length;
-
-            if (firstSlice.length < firstSliceMaxSize) {
-                const left = firstSliceMaxSize - firstSlice.length;
-                firstSlice += left > chunk.length ? chunk : chunk.slice(0, left);
-            }
-
-            dataStreamController.enqueue(chunk);
-        } else {
+        if (chunkNode.nodeType !== Node.TEXT_NODE) {
             // bailout: not a text node -> a complex markup is not a JSON
             throw raiseBailout('Input not a text');
         }
 
+        if (isFirstChunk) {
+            if (/^\s*[{[]/.test(chunkNode.nodeValue)) {
+                // probably JSON, accept an object or an array only to reduce false positive
+                if (dataStreamController === null) {
+                    if (iframe === null) {
+                        pre.before(getIframe(settings));
+                    }
+
+                    return;
+                }
+            } else {
+                // bailout: not a JSON or a non-object / non-array value
+                throw raiseBailout('Not a JSON or a non-object / non-array value');
+            }
+        }
+
+        const chunk = chunkNode === preCursor
+            // slice a new content from a chunk node in case a content
+            // was appended to an existing text node
+            ? chunkNode.nodeValue.slice(prevCursorValue.length)
+            : chunkNode.nodeValue;
+        prevCursorValue = chunkNode === preCursor
+            ? chunkNode.nodeValue
+            : chunk;
+
+        if (firstSlice.length < firstSliceMaxSize) {
+            const left = firstSliceMaxSize - firstSlice.length;
+            firstSlice += left >= chunk.length ? chunk : chunk.slice(0, left);
+        }
+
+        totalSize += chunk.length;
+        dataStreamController.enqueue(chunk);
         preCursor = chunkNode;
-        prevCursorValue = preCursor.nodeValue;
     }
 };
 
@@ -229,6 +229,10 @@ function getIframe(settings) {
             json: pre.textContent
         }));
 
+        app.defineAction('exit', () => {
+            rollbackPageChanges();
+        });
+
         app.on('darkmodeChanged', async event => {
             const settings = await getSettings();
             let darkmode = 'auto';
@@ -249,6 +253,9 @@ function getIframe(settings) {
         app.uploadData(new ReadableStream({
             start(controller_) {
                 dataStreamController = controller_;
+            },
+            async pull() {
+                checkLoaded(await getSettings());
             },
             cancel() {
                 dataStreamController = null;
@@ -313,6 +320,8 @@ async function checkLoaded(settings) {
 
         dataStreamController?.close();
         dataStreamController = null;
+        prevCursorValue = '';
+        preCursor = null;
     }
 }
 
@@ -321,6 +330,7 @@ window.addEventListener('DOMContentLoaded', () => {
     checkLoaded();
 }, { once: true });
 checkLoaded();
+setTimeout(checkLoaded);
 getSettings()
     .then(checkLoaded)
     .catch(rollbackPageChanges);
