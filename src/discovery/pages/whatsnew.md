@@ -1,3 +1,12 @@
+## next
+
+- Migrated to Manifest V3, eliminating warnings about the extension's future support
+- Achieved nearly zero impact on regular pages (non-JSON documents)
+- Enhanced performance for handling large JSON files (>100MB)
+- Clicking the extension button now opens a playground where JSON can be loaded from a file or clipboard
+- Updated `discovery.js` to version `1.0.0-beta.91`
+- Updated `jora` to version `1.0.0-beta.13`
+
 ## 1.14.0
 
 ### Discover
