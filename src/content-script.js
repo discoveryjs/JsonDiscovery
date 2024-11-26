@@ -298,7 +298,7 @@ async function checkLoaded(settings) {
         }
     }
 
-    if (!settings || pre === null) {
+    if (!settings || pre === null || preCursor === null) {
         return;
     }
 
@@ -307,7 +307,7 @@ async function checkLoaded(settings) {
         applyContainerStyles(document.body, settings.darkmode);
     }
 
-    if (!documentFullyLoaded || dataStreamController === null) {
+    if (!documentFullyLoaded || preCursor === undefined) {
         flushData(settings);
         loadedTimer = requestAnimationFrame(() =>
             checkLoaded(settings).catch(rollbackPageChanges)
@@ -320,7 +320,6 @@ async function checkLoaded(settings) {
 
         dataStreamController?.close();
         dataStreamController = null;
-        pre = null;
         preCursor = null;
         prevCursorValue = '';
     }
