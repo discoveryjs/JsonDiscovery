@@ -307,7 +307,7 @@ async function checkLoaded(settings) {
         applyContainerStyles(document.body, settings.darkmode);
     }
 
-    if (!documentFullyLoaded) {
+    if (!documentFullyLoaded || dataStreamController === null) {
         flushData(settings);
         loadedTimer = requestAnimationFrame(() =>
             checkLoaded(settings).catch(rollbackPageChanges)
@@ -320,8 +320,9 @@ async function checkLoaded(settings) {
 
         dataStreamController?.close();
         dataStreamController = null;
-        prevCursorValue = '';
+        pre = null;
         preCursor = null;
+        prevCursorValue = '';
     }
 }
 
