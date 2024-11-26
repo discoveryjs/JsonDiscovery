@@ -16,8 +16,6 @@
  * Navigation bar
  */
 .discovery-nav-popup .splitter {
-    margin: 4px 0;
-    height: 1px;
     border-bottom: inherit;
 }
 
@@ -61,9 +59,24 @@
     background-color: currentColor;
     visibility: visible;
 }
-
 .view-page-header .view-button.expand-all:empty::after {
     mask-image: url('./img/expand-all.svg');
+}
+.view-page-header .view-button.expand-all:empty::after {
+    mask-image: url('./img/expand-all.svg');
+}
+
+.discovery-nav > .view-nav-button[data-name="upload-data-from-clipboard"]::before {
+    content: '';
+    display: inline-block;
+    vertical-align: text-top;
+    height: 15px;
+    aspect-ratio: 1;
+    margin-left: -7px;
+    margin-right: -7px;
+    mask: url('./img/clipboard.png') no-repeat center / 17px;
+    background-color: currentColor;
+    opacity: .85;
 }
 
 /* Safari quirk mode fix */

@@ -61,15 +61,39 @@ export function initDiscovery() {
  * Discovery empty page initialization
  */
 export function initAppDiscovery() {
-    const discovery = new App({
+    new App({
         ...commonConfig,
         mode: 'modelfree',
         upload: { clipboard: true },
         extensions: [
             embedExtension,
-            flashMessages
+            flashMessages,
+            function buttons(host) {
+                host.nav.before('inspect', {
+                    name: 'upload-data-from-clipboard',
+                    when: '#.actions.uploadDataFromClipboard and #.datasets',
+                    onClick: '=#.actions.uploadDataFromClipboard',
+                    tooltip: {
+                        position: 'trigger',
+                        content: 'text:"Paste JSON from clipboard"'
+                    }
+                });
+                // FIXME: use navButtons.unloadData instead, once issue with modelfree render cancel is solved
+                host.nav.menu.append({
+                    name: 'unload-data',
+                    when: '#.actions.unloadData and #.datasets',
+                    content: 'text:"Unload data"',
+                    onClick() {
+                        host.action.call('unloadData');
+                        host.scheduleRender();
+                    }
+                });
+                host.nav.primary.append({
+                    name: 'github',
+                    href: 'https://github.com/discoveryjs/JsonDiscovery',
+                    external: true
+                });
+            }
         ]
     });
-
-    // discovery.nav.remove('index-page');
 }

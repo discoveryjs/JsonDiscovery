@@ -54,8 +54,6 @@ getSettings().then(settings => {
         app.setPageHash(location.hash);
         app.setLocationSync(true);
 
-        app.notify('test', { test: 123 });
-
         iframe.classList.add('ready');
     });
 });
