@@ -158,23 +158,25 @@ function getIframe(settings) {
 
     iframe = document.createElement('iframe');
     iframe.className = 'discovery';
+    iframe.src = chrome.runtime.getURL('sandbox.html');
     iframe.setAttribute('sandbox', 'allow-scripts allow-popups allow-modals');
     iframe.setAttribute('allow', 'clipboard-write');
-    iframe.src = chrome.runtime.getURL('sandbox.html');
     iframe.style.cssText = 'position: fixed; inset: 0; border: 0; width: 100%; height: 100%; visibility: hidden';
 
     // Check if scripts in the sandbox iframe work, otherwise rollback since we can't display anything.
     // The first script in the sandbox iframe sends message, it should be delivered before onload event fires
     {
         let scriptsWorks = false;
-
-        window.addEventListener('message', e => {
+        const jsonDiscoverySandboxMessageHandler = e => {
             if (e.data === 'json-discovery-sandbox-scripts-work') {
                 scriptsWorks = true;
             }
-        }, { once: true });
+        };
 
+        window.addEventListener('message', jsonDiscoverySandboxMessageHandler);
         iframe.onload = () => {
+            window.removeEventListener('message', jsonDiscoverySandboxMessageHandler);
+
             if (!scriptsWorks) {
                 rollbackPageChanges(raiseBailout('Scripts or postMessage() doesn\'t work in sandbox'));
             } else {
@@ -331,6 +333,7 @@ window.addEventListener('DOMContentLoaded', () => {
 }, { once: true });
 checkLoaded();
 setTimeout(checkLoaded);
+Promise.resolve().then(checkLoaded);
 getSettings()
     .then(checkLoaded)
     .catch(rollbackPageChanges);
