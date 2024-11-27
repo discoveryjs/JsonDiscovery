@@ -11,8 +11,7 @@
         "128": "icons/128.png"
     },
     "permissions": [
-        "storage",
-        "tabs"
+        "storage"
     ],
     "host_permissions": [
         "*://*/*"
