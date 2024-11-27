@@ -7,6 +7,10 @@
 }
 .page-default > .view-struct {
     background-color: transparent;
-    padding: 10px 0 0 0;
+    padding: 0;
+    margin-top: 10px;
     margin-bottom: -4px;
+}
+.page-default > .view-struct.struct-expand:hover {
+    outline: 5px solid rgba(187, 187, 187, 0.25);
 }

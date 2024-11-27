@@ -37,6 +37,7 @@
     font-size: 12px;
     line-height: 1.1;
     padding: 6px 8px;
+    user-select: none;
 }
 .view-page-header .view-button.collapse-all {
     border-top-right-radius: 0;
