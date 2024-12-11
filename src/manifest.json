@@ -5,6 +5,8 @@
     "description": "Browser extension that changes the way you're viewing JSON",
     "author": "exdis",
     "manifest_version": 3,
+    "offline_enabled": true,
+    "incognito": "split",
     "icons": {
         "16": "icons/16.png",
         "48": "icons/48.png",
@@ -53,6 +55,5 @@
                 "<all_urls>"
             ]
         }
-    ],
-    "offline_enabled": true
+    ]
 }
