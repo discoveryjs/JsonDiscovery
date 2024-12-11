@@ -1,3 +1,7 @@
+## next
+
+- Fixed the action button to open a tab in the incognito window when clicked there (by setting `incognito: split` in the manifest). Previously, the action button would always open the tab in a regular window, even if clicked in an incognito window.
+
 ## 1.15.0 (26-11-2024)
 
 - Migrated to Manifest V3, eliminating warnings about the extension's future support
