@@ -107,15 +107,6 @@ export function initAppDiscovery() {
             embedExtension,
             flashMessages,
             function buttons(host) {
-                host.nav.before('inspect', {
-                    name: 'upload-data-from-clipboard',
-                    when: '#.actions.uploadDataFromClipboard and #.datasets',
-                    onClick: '=#.actions.uploadDataFromClipboard',
-                    tooltip: {
-                        position: 'trigger',
-                        content: 'text:"Paste JSON from clipboard"'
-                    }
-                });
                 // FIXME: use navButtons.unloadData instead, once issue with modelfree render cancel is solved
                 host.nav.menu.append({
                     name: 'unload-data',
@@ -128,6 +119,7 @@ export function initAppDiscovery() {
                 });
                 host.nav.primary.append({
                     name: 'github',
+                    text: '',
                     href: 'https://github.com/discoveryjs/JsonDiscovery',
                     external: true
                 });
