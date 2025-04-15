@@ -1,26 +1,41 @@
-.discovery-root[data-page="settings"] {
+.page-settings {
     --discovery-page-padding-left: 40px;
 }
 
-.discovery-root[data-page="settings"] .view-h1 {
+.page-settings .view-h1 {
     margin-top: 0;
 }
 
-.view-fieldset {
-    width: 400px;
+.page-settings .monospace-settings > .section-content {
     display: flex;
-    margin: 8px 0;
-    align-items: center;
+    gap: 20px;
 }
-
-.view-fieldset > * + * {
-    margin-left: 6px;
+.page-settings .monospace-settings > .section-content > .settings {
+    min-width: 250px;
 }
-
-.view-fieldset .view-input {
+.page-settings .monospace-settings > .section-content > :last-child {
+    flex: 1;
+    display: flex;
+    gap: 10px;
+}
+.page-settings .monospace-settings > .section-content > :last-child > * {
     flex: 1;
 }
+.page-settings .view-input input[type="color"] {
+    width: revert;
+    padding: 2px;
+}
 
-.view-label {
-    line-height: 34px;
+.page-settings .changes-actions {
+    position: sticky;
+    bottom: 0px;
+    z-index: 1;
+    background: color-mix(in srgb, var(--discovery-background-color), transparent 30%);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid #161616;
+    padding: 10px 0 10px var(--discovery-page-padding-left);
+    margin: 0 calc(-1 * var(--discovery-page-padding-left)) 0 calc(-1 * var(--discovery-page-padding-right));
+}
+.page-settings .changes-actions .view-button {
+    min-width: 100px;
 }

@@ -1,3 +1,3 @@
-import { applyContainerStyles } from '@discoveryjs/discovery/src/core/utils/container-styles.js';
+import { applyContainerStyles, getLocalStorageValue } from '@discoveryjs/discovery/utils';
 
-applyContainerStyles(document.documentElement, localStorage.getItem('darkmode') || 'auto');
+applyContainerStyles(document.documentElement, getLocalStorageValue('darkmode') || 'auto');

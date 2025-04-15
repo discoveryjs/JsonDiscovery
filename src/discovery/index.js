@@ -5,13 +5,23 @@ import flashMessages from './flash-messages';
 import navbar from './navbar';
 import * as pages from './pages';
 
+const settingToCssProperties = {
+    monospaceFontFamily: 'monospace-font-family',
+    monospaceFontSize: ['monospace-font-size', value => value + 'px'],
+    monospaceLineHeight: 'monospace-line-height',
+    fmtPropertyColor: 'fmt-property-color',
+    fmtAtomColor: 'fmt-atom-color',
+    fmtNumberColor: 'fmt-number-color',
+    fmtStringColor: 'fmt-string-color',
+    fmtFlagColor: 'fmt-flag-color'
+};
 const commonConfig = {
     name: 'JsonDiscovery',
     description: 'Changing the way to explore JSON',
     version,
     styles: [{ type: 'link', href: 'discovery.css' }],
     inspector: true,
-    darkmodePersistent: true,
+    colorSchemePersistent: true,
     setup({ addQueryHelpers }) {
         addQueryHelpers(joraHelpers);
     }
@@ -20,6 +30,33 @@ const embedExtension = (host) => {
     return embed.setup({
         onNotify(name, details) {
             switch (name) {
+                case 'settings': {
+                    // console.log('settings', details);
+                    for (const [key, { newValue: value }] of Object.entries(details)) {
+                        switch (key) {
+                            case 'darkmode':
+                                host.colorScheme.set(value || 'auto');
+                                break;
+
+                            default: {
+                                if (Object.hasOwn(settingToCssProperties, key)) {
+                                    const [name, format = value => value] = Array.isArray(settingToCssProperties[key])
+                                        ? settingToCssProperties[key]
+                                        : [settingToCssProperties[key]];
+                                    const styleProperty = '--discovery-' + name;
+
+                                    if (value) {
+                                        host.dom.container.setProperty(styleProperty, format(value));
+                                    } else {
+                                        host.dom.container.removeProperty(styleProperty);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+                }
+
                 case 'saveAsFile': {
                     const { id, done, filename, completed, total } = details;
                     host.action.call('flashMessage', {
@@ -33,6 +70,7 @@ const embedExtension = (host) => {
                     });
                     break;
                 }
+
                 default:
                     console.warn('Unknown notification:', name, details); // eslint-disable-line no-console
             }

@@ -1,6 +1,6 @@
 import { applyContainerStyles, rollbackContainerStyles, copyText } from '@discoveryjs/discovery/utils';
 import { connectToEmbedApp } from '@discoveryjs/discovery/embed';
-import { getSettings } from './settings.js';
+import { getSettings, resetSettings, setSettings, subscribeSettings } from './settings.js';
 import { downloadAsFile, saveAsFile } from './actions/download-as-file.js';
 
 const firstSliceMaxSize = 100 * 1000;
@@ -188,23 +188,15 @@ function getIframe(settings) {
 
     connectToEmbedApp(iframe, (app) => {
         // settings
-        let darkmode = 'auto';
-
-        switch (settings.darkmode) {
-            case true:
-                darkmode = 'dark';
-                break;
-            case false:
-                darkmode = 'light';
-                break;
-        }
-
-        app.setDarkmode(darkmode);
+        app.setColorSchemeState(settings.darkmode);
+        app.on('colorSchemeChanged', event => setSettings({ darkmode: event.value }));
         app.defineAction('getSettings', () => getSettings());
-        app.defineAction('setSettings', settings => {
-            chrome.storage.sync.set(settings);
-        });
+        app.defineAction('setSettings', (settings) => setSettings(settings));
+        app.defineAction('resetSettings', (keys) => resetSettings(keys));
+        subscribeSettings((delta) => app.notify('settings', delta));
+        app.notify('settings', Object.fromEntries(Object.entries(settings).map(([k, v]) => [k, { newValue: v }])));
 
+        // actions
         app.defineAction('copyToClipboard', () => copyText(pre.textContent));
 
         if (typeof saveAsFile === 'function') {
@@ -233,22 +225,6 @@ function getIframe(settings) {
 
         app.defineAction('exit', () => {
             rollbackPageChanges();
-        });
-
-        app.on('darkmodeChanged', async event => {
-            const settings = await getSettings();
-            let darkmode = 'auto';
-
-            switch (event.value) {
-                case 'light':
-                    darkmode = false;
-                    break;
-                case 'dark':
-                    darkmode = true;
-                    break;
-            }
-
-            chrome.storage.sync.set({ ...settings, darkmode });
         });
 
         // upload data

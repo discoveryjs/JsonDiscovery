@@ -1,52 +1,25 @@
 import { applyContainerStyles } from '@discoveryjs/discovery/utils';
 import { connectToEmbedApp } from '@discoveryjs/discovery/embed';
-import { getSettings } from './settings.js';
+import { getSettings, resetSettings, setSettings, subscribeSettings } from './settings.js';
 
-function applyDarkmodeStyles(darkmode) {
-    applyContainerStyles(document.documentElement, darkmode);
-    localStorage.setItem('darkmode', darkmode);
+function applyColorSchemeStyles(colorScheme) {
+    applyContainerStyles(document.documentElement, colorScheme);
+    localStorage.setItem('darkmode', colorScheme);
 }
 
 getSettings().then(settings => {
     const iframe = document.querySelector('iframe');
 
-    applyDarkmodeStyles(settings.darkmode);
+    applyColorSchemeStyles(settings.darkmode);
     connectToEmbedApp(iframe, (app) => {
         // settings
-        let darkmode = 'auto';
-
-        switch (settings.darkmode) {
-            case true:
-                darkmode = 'dark';
-                break;
-            case false:
-                darkmode = 'light';
-                break;
-        }
-
-        app.setDarkmode(darkmode);
-        app.on('darkmodeChanged', async event => {
-            const settings = await getSettings();
-            let darkmode = 'auto';
-
-            switch (event.value) {
-                case 'light':
-                    darkmode = false;
-                    break;
-                case 'dark':
-                    darkmode = true;
-                    break;
-            }
-
-            chrome.storage.sync.set({ ...settings, darkmode });
-            applyDarkmodeStyles(darkmode);
-        });
-
-        // actions
+        app.setColorSchemeState(settings.darkmode);
+        app.on('colorSchemeChanged', event => setSettings({ darkmode: event.value }));
         app.defineAction('getSettings', () => getSettings());
-        app.defineAction('setSettings', settings => {
-            chrome.storage.sync.set(settings);
-        });
+        app.defineAction('setSettings', (settings) => setSettings(settings));
+        app.defineAction('resetSettings', (keys) => resetSettings(keys));
+        subscribeSettings((delta) => app.notify('settings', delta));
+        app.notify('settings', Object.fromEntries(Object.entries(settings).map(([k, v]) => [k, { newValue: v }])));
 
         // sync location
         // Note: should be last since lead to renders
