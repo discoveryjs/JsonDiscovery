@@ -3,6 +3,7 @@ import { connectToEmbedApp } from '@discoveryjs/discovery/embed';
 import { getSettings, resetSettings, setSettings, subscribeSettings } from './settings.js';
 import { downloadAsFile, saveAsFile } from './actions/download-as-file.js';
 
+const BUFFER_SIZE = 4 * 64 * 1024;
 const firstSliceMaxSize = 100 * 1000;
 let documentFullyLoaded = document.readyState === 'complete';
 let loadedTimer;
@@ -14,10 +15,28 @@ let prevCursorValue = '';
 let dataStreamController = null;
 let stylesApplied = false;
 let totalSize = 0;
+let buffer = '';
 let firstSlice = '';
 
 function raiseBailout(reason) {
     return Object.assign(new Error('Rollback'), { bailout: reason });
+}
+
+function buildFirstSlice(pre) {
+    let slice = '';
+
+    for (
+        let cursor = pre.firstChild, left = firstSliceMaxSize;
+        left > 0 && cursor !== null;
+        cursor = cursor.nextSibling
+    ) {
+        const chunk = cursor.nodeValue;
+
+        slice += left >= chunk.length ? chunk : chunk.slice(0, left);
+        left -= chunk.length;
+    }
+
+    return slice;
 }
 
 const flushData = (settings) => {
@@ -71,18 +90,19 @@ const flushData = (settings) => {
             // was appended to an existing text node
             ? chunkNode.nodeValue.slice(prevCursorValue.length)
             : chunkNode.nodeValue;
+
         prevCursorValue = chunkNode === preCursor
             ? chunkNode.nodeValue
             : chunk;
-
-        if (firstSlice.length < firstSliceMaxSize) {
-            const left = firstSliceMaxSize - firstSlice.length;
-            firstSlice += left >= chunk.length ? chunk : chunk.slice(0, left);
-        }
+        preCursor = chunkNode;
 
         totalSize += chunk.length;
-        dataStreamController.enqueue(chunk);
-        preCursor = chunkNode;
+        buffer += chunk;
+
+        if (buffer.length > BUFFER_SIZE) {
+            dataStreamController.enqueue(buffer);
+            buffer = '';
+        }
     }
 };
 
@@ -296,8 +316,14 @@ async function checkLoaded(settings) {
     if (pre !== null) {
         flushData(settings);
 
+        if (buffer !== '') {
+            dataStreamController.enqueue(buffer);
+            buffer = '';
+        }
+
         dataStreamController?.close();
         dataStreamController = null;
+        firstSlice = buildFirstSlice(pre);
         preCursor = null;
         prevCursorValue = '';
     }
