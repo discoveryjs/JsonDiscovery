@@ -1,3 +1,9 @@
+## 1.16.0
+
+- Support for loading `gzip` and `deflate` encoded data in sandbox. Encoding is detected by inspecting the payload header, enabling automatic decoding prior to standard data decoding or parsing.
+- Introduced experimental [text-based rendering](https://github.com/discoveryjs/discovery/releases/tag/1.0.0-beta.94)
+- Updated `discovery.js` to version `1.0.0-beta.95`
+
 ## 1.15.0
 
 - Migrated to Manifest V3, eliminating warnings about the extension's future support

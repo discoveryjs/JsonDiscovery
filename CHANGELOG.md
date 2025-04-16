@@ -1,6 +1,8 @@
-## next
+## 1.16.0 (16-04-2025)
 
 - Fixed the action button to open a tab in the incognito window when clicked there (by setting `incognito: split` in the manifest). Previously, the action button would always open the tab in a regular window, even if clicked in an incognito window.
+- Various fixes and improvements related to data loading
+- Updated `discovery.js` to version `1.0.0-beta.95` (text rendering, gzip support)
 
 ## 1.15.0 (26-11-2024)
 
