@@ -1,17 +1,21 @@
+## 1.16.1 (21-04-2025)
+
+* Fixed the "Show the rest" button on lists to correctly render all remaining elements, instead of just the next N
+
 ## 1.16.0 (16-04-2025)
 
-- Fixed the action button to open a tab in the incognito window when clicked there (by setting `incognito: split` in the manifest). Previously, the action button would always open the tab in a regular window, even if clicked in an incognito window.
-- Various fixes and improvements related to data loading
-- Updated `discovery.js` to version `1.0.0-beta.95` (text rendering, gzip support)
+* Fixed the action button to open a tab in the incognito window when clicked there (by setting `incognito: split` in the manifest). Previously, the action button would always open the tab in a regular window, even if clicked in an incognito window.
+* Various fixes and improvements related to data loading
+* Updated `discovery.js` to version `1.0.0-beta.95` (text rendering, gzip support)
 
 ## 1.15.0 (26-11-2024)
 
-- Migrated to Manifest V3, eliminating warnings about the extension's future support
-- Achieved nearly zero impact on regular pages (non-JSON documents)
-- Enhanced performance for handling large JSON files (>100MB)
-- Clicking the extension button now opens a playground where JSON can be loaded from a file or clipboard
-- Updated `discovery.js` to version `1.0.0-beta.91`
-- Updated `jora` to version `1.0.0-beta.13`
+* Migrated to Manifest V3, eliminating warnings about the extension's future support
+* Achieved nearly zero impact on regular pages (non-JSON documents)
+* Enhanced performance for handling large JSON files (>100MB)
+* Clicking the extension button now opens a playground where JSON can be loaded from a file or clipboard
+* Updated `discovery.js` to version `1.0.0-beta.91`
+* Updated `jora` to version `1.0.0-beta.13`
 
 ## 1.14.1 (20-05-2024)
 

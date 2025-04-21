@@ -11,7 +11,7 @@
     "build": "NODE_ENV=production node ./scripts/build.js && node ./scripts/zip.js"
   },
   "devDependencies": {
-    "@discoveryjs/discovery": "1.0.0-beta.95",
+    "@discoveryjs/discovery": "1.0.0-beta.96",
     "esbuild": "^0.25.2",
     "eslint": "^8.50.0",
     "jszip": "^3.10.1"
