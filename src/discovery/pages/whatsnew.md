@@ -1,3 +1,18 @@
+## 1.17.0
+
+* Reworked the computation graph on the discovery page with improved visuals and complex-graph layout
+* Added [`text-diff`](https://discoveryjs.github.io/discovery/#views-showcase:text-diff) view
+* Extended `struct` view:
+   * Added support for displaying error values (when `is error` is true)
+   * Added a default image-like content string detection annotation: when a string value is identified as image-like content, a badge `image` is displayed before the string, showing an image preview on hover
+* New jora methods and assertions:
+   * JSON methods: `jsonParse()`, `jsonStringify()`, and `jsonInfo()` (the latter based on `stringifyInfo()` from [`json-ext`](https://github.com/discoveryjs/json-ext))
+   * Image like content methods: `imagecontent()`, `imagedatauri()` and `imagesrc()`
+   * New assertions: `imagecontent`, `imagedatauri`, `imagesrc` and `error`, e.g. `expr is imagedatauri`
+* Extended `limit` option for supported web views to accept an object with optional properties: `{ start, startTolerance, base, tolerance }`
+* Updated `discovery.js` to version `1.0.0-beta.99`
+* Updated `jora` to version `1.0.0-beta.13`
+
 ## 1.16.0
 
 - Support for loading `gzip` and `deflate` encoded data in sandbox. Encoding is detected by inspecting the payload header, enabling automatic decoding prior to standard data decoding or parsing.
