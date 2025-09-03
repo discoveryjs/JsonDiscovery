@@ -2,14 +2,14 @@
 
 A browser extension that changes the way you're viewing JSON
 
-[![Chrome Web Store](https://badgen.net/chrome-web-store/v/pamhglogfolfbmlpnenhpeholpnlcclo)](https://chrome.google.com/webstore/detail/jsondiscovery/pamhglogfolfbmlpnenhpeholpnlcclo)
+[![Chrome Web Store](https://badgen.net/chrome-web-store/v/pamhglogfolfbmlpnenhpeholpnlcclo)](https://chromewebstore.google.com/detail/jsondiscovery/pamhglogfolfbmlpnenhpeholpnlcclo)
 [![Mozilla Addons](https://badgen.net/amo/v/jsondiscovery)](https://addons.mozilla.org/en-US/firefox/addon/jsondiscovery/)
 
 ![JsonDiscovery](https://i.imgur.com/aMinbNB.png)
 
 Add the extension to your browser:
 
-* [Chrome Web Store](https://chrome.google.com/webstore/detail/discoveryjson/pamhglogfolfbmlpnenhpeholpnlcclo) (for Chrome & Edge, see [additional instructions](#chrome--edge))
+* [Chrome Web Store](https://chromewebstore.google.com/detail/jsondiscovery/pamhglogfolfbmlpnenhpeholpnlcclo) (for Chrome & Edge, see [additional instructions](#chrome--edge))
 * [Firefox Browser Add-ons](https://addons.mozilla.org/firefox/addon/jsondiscovery/) (see [additional instructions](#firefox))
 * [Releases](https://github.com/discoveryjs/browser-extension-json-discovery/releases) section
 
