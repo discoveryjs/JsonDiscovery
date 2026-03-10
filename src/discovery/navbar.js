@@ -84,6 +84,7 @@ export default host => {
     //
     host.nav.primary.append({
         name: 'github',
+        data: '#',
         href: 'https://github.com/discoveryjs/JsonDiscovery',
         external: true
     });
