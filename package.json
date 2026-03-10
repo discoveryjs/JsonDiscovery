@@ -6,14 +6,15 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "lint": "eslint --ext .js src scripts",
+    "lint": "eslint src scripts",
     "dev": "node ./scripts/build.js",
     "build": "NODE_ENV=production node ./scripts/build.js && node ./scripts/zip.js"
   },
   "devDependencies": {
     "@discoveryjs/discovery": "1.0.0-beta.99",
     "esbuild": "^0.25.2",
-    "eslint": "^8.50.0",
+    "eslint": "^10.0.2",
+    "globals": "^17.3.0",
     "jszip": "^3.10.1"
   }
 }
