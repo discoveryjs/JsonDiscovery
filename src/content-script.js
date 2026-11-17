@@ -118,20 +118,47 @@ function rollbackPageChanges(error) {
         iframe = null;
     }
 
+    // Prevent re-entry after bailout/failure; keep `pre` so we don't rediscover and re-hide it
+    stylesApplied = false;
+    preCursor = null;
+
     // it might to take a lot of time to render large text,
     // so make it visible in next frame to allow styles rollback
+    const elementsToRestore = disabledElements;
+    disabledElements = null;
     requestAnimationFrame(() => {
-        if (disabledElements !== null) {
-            disabledElements.forEach(({ element, hidden, remove }) =>
-                remove ? element.remove() : (element.hidden = hidden)
-            );
-            disabledElements = null;
-        }
+        elementsToRestore?.forEach(({ element, hidden, remove }) =>
+            remove ? element.remove() : (element.hidden = hidden)
+        );
     });
 
     if (error?.bailout) {
         console.warn('[JsonDiscovery] Bailout reason:', error.bailout); // eslint-disable-line no-console
     }
+}
+
+function scheduleCheckLoaded() {
+    getSettings()
+        .then(checkLoaded)
+        .catch(rollbackPageChanges);
+}
+
+// Returns:
+//   true  – first chunk looks like a JSON object/array
+//   false – definitely not a plain JSON text pre
+//   null  – not enough content yet (possible streaming JSON)
+function probeJsonPre(element) {
+    const firstChild = element.firstChild;
+
+    if (!firstChild) {
+        return (documentFullyLoaded || element.nextSibling) ? false : null;
+    }
+
+    if (firstChild.nodeType !== Node.TEXT_NODE) {
+        return false;
+    }
+
+    return /^\s*[{[]/.test(firstChild.nodeValue || '') ? true : false;
 }
 
 function isPre(element) {
@@ -274,29 +301,51 @@ function getIframe(settings) {
 }
 
 async function checkLoaded(settings) {
+    // preCursor === null means we already finished or rolled back
+    if (!settings || preCursor === null) {
+        return;
+    }
+
     if (pre === null && !stylesApplied) {
         const firstElement = document.body?.firstElementChild;
+        const candidate = isPre(firstElement) || isPre(firstElement?.nextElementSibling);
 
-        pre = isPre(firstElement) || isPre(firstElement?.nextElementSibling);
-
-        if (pre) {
-            disableElement(pre);
-
-            // Chrome placed formatter container before <pre> in mid 2023
-            // https://issues.chromium.org/issues/40282442
-            if (firstElement !== pre) {
-                disableElement(firstElement);
+        if (!candidate) {
+            // document_start: body/<pre> might appear a moment later
+            if (!documentFullyLoaded) {
+                loadedTimer = requestAnimationFrame(() =>
+                    checkLoaded(settings).catch(rollbackPageChanges)
+                );
             }
 
-            // Chrome moved formatter container after <pre>
-            // https://github.com/chromium/chromium/commit/1ca95a7aedd55cafb40f11e839a02bf8cc7ef99d
-            if (pre.nextElementSibling?.classList?.contains('json-formatter-container')) {
-                disableElement(pre.nextElementSibling);
-            }
+            return;
+        }
+
+        const probe = probeJsonPre(candidate);
+
+        // Non-JSON pages must not be touched (fixes blank page with pre[hidden], #100)
+        if (probe === false) {
+            preCursor = null;
+            return;
+        }
+
+        pre = candidate;
+        disableElement(pre);
+
+        // Chrome placed formatter container before <pre> in mid 2023
+        // https://issues.chromium.org/issues/40282442
+        if (firstElement !== pre) {
+            disableElement(firstElement);
+        }
+
+        // Chrome moved formatter container after <pre>
+        // https://github.com/chromium/chromium/commit/1ca95a7aedd55cafb40f11e839a02bf8cc7ef99d
+        if (pre.nextElementSibling?.classList?.contains('json-formatter-container')) {
+            disableElement(pre.nextElementSibling);
         }
     }
 
-    if (!settings || pre === null || preCursor === null) {
+    if (pre === null) {
         return;
     }
 
@@ -313,30 +362,25 @@ async function checkLoaded(settings) {
         return;
     }
 
-    if (pre !== null) {
-        flushData(settings);
+    flushData(settings);
 
-        if (buffer !== '') {
-            dataStreamController.enqueue(buffer);
-            buffer = '';
-        }
-
-        dataStreamController?.close();
-        dataStreamController = null;
-        firstSlice = buildFirstSlice(pre);
-        preCursor = null;
-        prevCursorValue = '';
+    if (buffer !== '') {
+        dataStreamController.enqueue(buffer);
+        buffer = '';
     }
+
+    dataStreamController?.close();
+    dataStreamController = null;
+    firstSlice = buildFirstSlice(pre);
+    preCursor = null;
+    prevCursorValue = '';
 }
 
 window.addEventListener('DOMContentLoaded', () => {
     documentFullyLoaded = true;
-    checkLoaded();
+    scheduleCheckLoaded();
 }, { once: true });
-checkLoaded();
-setTimeout(checkLoaded);
-Promise.resolve().then(checkLoaded);
-getSettings()
-    .then(checkLoaded)
-    .catch(rollbackPageChanges);
+scheduleCheckLoaded();
+setTimeout(scheduleCheckLoaded);
+Promise.resolve().then(scheduleCheckLoaded);
 
