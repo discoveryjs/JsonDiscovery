@@ -1,3 +1,7 @@
+## next
+
+* Fixed a race where a non-JSON `<pre>` could stay `hidden` when settings resolved before the node appeared (`#100`)
+
 ## 1.17.0 (02-09-2025)
 
 * Reworked the computation graph on the discovery page with improved visuals and complex-graph layout
